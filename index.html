@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário de Horóscopo</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-column">
+            <h2>Formulário</h2>
+            <form id="horoscopeForm">
+                <div class="input-group">
+                    <label for="name">Nome:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="input-group">
+                    <label for="dob">Data de Nascimento:</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                <div class="input-group">
+                    <label for="cpf">CPF:</label>
+                    <input type="text" id="cpf" name="cpf" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <button type="submit" class="submit-btn">Enviar</button>
+            </form>
+        </div>
+        <div class="result-column">
+            <div id="horoscopeResult" class="hidden">
+                <h2>Resultados</h2>
+                <p>Nome: <span id="displayName"></span></p>
+                <p>Data de Nascimento: <span id="displayDob"></span></p>
+                <p>CPF: <span id="displayCpf"></span></p>
+                <p>Email: <span id="displayEmail"></span></p>
+                <p><span id="horoscopeMessage"></span></p>
+                <button id="tryAgainBtn" class="submit-btn">Tentar Novamente</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("horoscopeForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Captura os dados do formulário
+            var name = document.getElementById("name").value;
+            var dob = document.getElementById("dob").value;
+            var cpf = document.getElementById("cpf").value;
+            var email = document.getElementById("email").value;
+
+            // Gera o horóscopo fictício
+            var horoscope = getFakeHoroscope();
+
+            // Esconde o formulário e exibe o resultado
+            document.querySelector(".form-column").classList.add("hidden");
+            document.getElementById("displayName").textContent = name;
+            document.getElementById("displayDob").textContent = formatDate(dob);
+            document.getElementById("displayCpf").textContent = cpf;
+            document.getElementById("displayEmail").textContent = email;
+            document.getElementById("horoscopeMessage").textContent = horoscope;
+
+            document.getElementById("horoscopeResult").classList.remove("hidden");
+        });
+
+        // Função que gera horóscopos fictícios aleatórios
+        function getFakeHoroscope() {
+            var horoscopes = [
+                "Hoje é um dia de autorreflexão. Abrace sua força interior.",
+                "Uma oportunidade surpresa está no horizonte. Esteja pronto para agir!",
+                "Sua criatividade vai brilhar hoje. Compartilhe suas ideias.",
+                "Um amigo próximo pode precisar do seu apoio hoje. Esteja lá para eles.",
+                "Novas aventuras esperam por você. Aproveite a oportunidade e explore!",
+                "Hoje é um bom dia para focar no crescimento pessoal. Estabeleça novas metas.",
+                "Espere boas notícias em um futuro próximo. Mantenha-se positivo!",
+                "Paciência é a chave hoje. Não se precipite nas decisões."
+            ];
+
+            var randomIndex = Math.floor(Math.random() * horoscopes.length);
+            return horoscopes[randomIndex];
+        }
+
+        // Função para formatar a data (YYYY-MM-DD -> DD/MM/YYYY)
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+        }
+
+        // Função para aplicar máscara de CPF
+        document.getElementById("cpf").addEventListener("input", function(event) {
+            var value = event.target.value;
+            event.target.value = formatCPF(value);
+        });
+
+        // Função para formatar CPF (000.000.000-00)
+        function formatCPF(value) {
+            value = value.replace(/\D/g, ""); // Remove caracteres não numéricos
+            value = value.replace(/(\d{3})(\d)/, "$1.$2"); // Adiciona o primeiro ponto
+            value = value.replace(/(\d{3})(\d)/, "$1.$2"); // Adiciona o segundo ponto
+            value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+            return value; // Retorna o valor formatado
+        }
+
+        // Evento para o botão "Tentar Novamente"
+        document.getElementById("tryAgainBtn").addEventListener("click", function() {
+            document.querySelector(".form-column").classList.remove("hidden");
+            document.getElementById("horoscopeResult").classList.add("hidden");
+
+            // Limpa os campos do formulário
+            document.getElementById("horoscopeForm").reset();
+        });
+    </script>
+</body>
+</html>
